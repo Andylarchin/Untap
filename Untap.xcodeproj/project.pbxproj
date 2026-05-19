@@ -1,0 +1,761 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 70;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		77FEDFE22FBCD03800B11692 /* SessionSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FEDFE12FBCD03800B11692 /* SessionSummaryView.swift */; };
+		77FEDFE62FBCD09400B11692 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FEDFE52FBCD09400B11692 /* PersistenceController.swift */; };
+		77FEDFE82FBCD09500B11692 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FEDFE72FBCD09500B11692 /* SessionManager.swift */; };
+		77FEDFEE2FBCD1B000B11692 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000013000 /* ManagedSettings.framework */; };
+		77FEDFF02FBCD1B000B11692 /* ManagedSettingsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77FEDFEF2FBCD1B000B11692 /* ManagedSettingsUI.framework */; };
+		77FEDFF82FBCD1B100B11692 /* UntapShieldConfig.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 77FEDFED2FBCD1B000B11692 /* UntapShieldConfig.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		77FEE0032FBCD1DA00B11692 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000013000 /* ManagedSettings.framework */; };
+		77FEE00B2FBCD1DA00B11692 /* UntapShieldAction.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 77FEE0022FBCD1DA00B11692 /* UntapShieldAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		77FEE0112FBCD2B600B11692 /* StreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FEE0102FBCD2B600B11692 /* StreakView.swift */; };
+		A1000001001 /* UntapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001000 /* UntapApp.swift */; };
+		A1000002001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002000 /* ContentView.swift */; };
+		A1000003001 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000003000 /* Theme.swift */; };
+		A1000004001 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004000 /* HomeView.swift */; };
+		A1000005001 /* BlocksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000005000 /* BlocksView.swift */; };
+		A1000006001 /* SocialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000006000 /* SocialView.swift */; };
+		A1000007001 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000007000 /* ProfileView.swift */; };
+		A1000008001 /* NFCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000008000 /* NFCManager.swift */; };
+		A1000009001 /* AppBlockingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000009000 /* AppBlockingManager.swift */; };
+		A1000010001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000010000 /* Assets.xcassets */; };
+		A1000011001 /* CoreNFC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000011000 /* CoreNFC.framework */; };
+		A1000012001 /* FamilyControls.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000012000 /* FamilyControls.framework */; };
+		A1000013001 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000013000 /* ManagedSettings.framework */; };
+		A1000014001 /* DeviceActivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1000014000 /* DeviceActivity.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		77FEDFF62FBCD1B100B11692 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1000019000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 77FEDFEC2FBCD1B000B11692;
+			remoteInfo = UntapShieldConfig;
+		};
+		77FEE0092FBCD1DA00B11692 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1000019000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 77FEE0012FBCD1DA00B11692;
+			remoteInfo = UntapShieldAction;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		77FEDFFD2FBCD1B100B11692 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				77FEE00B2FBCD1DA00B11692 /* UntapShieldAction.appex in Embed Foundation Extensions */,
+				77FEDFF82FBCD1B100B11692 /* UntapShieldConfig.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		77FEDFE12FBCD03800B11692 /* SessionSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSummaryView.swift; sourceTree = "<group>"; };
+		77FEDFE52FBCD09400B11692 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		77FEDFE72FBCD09500B11692 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		77FEDFED2FBCD1B000B11692 /* UntapShieldConfig.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = UntapShieldConfig.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		77FEDFEF2FBCD1B000B11692 /* ManagedSettingsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettingsUI.framework; path = System/Library/Frameworks/ManagedSettingsUI.framework; sourceTree = SDKROOT; };
+		77FEE0022FBCD1DA00B11692 /* UntapShieldAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = UntapShieldAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		77FEE0102FBCD2B600B11692 /* StreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakView.swift; sourceTree = "<group>"; };
+		A1000001000 /* UntapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UntapApp.swift; sourceTree = "<group>"; };
+		A1000002000 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A1000003000 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A1000004000 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A1000005000 /* BlocksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksView.swift; sourceTree = "<group>"; };
+		A1000006000 /* SocialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialView.swift; sourceTree = "<group>"; };
+		A1000007000 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		A1000008000 /* NFCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCManager.swift; sourceTree = "<group>"; };
+		A1000009000 /* AppBlockingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBlockingManager.swift; sourceTree = "<group>"; };
+		A1000010000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1000011000 /* CoreNFC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreNFC.framework; path = System/Library/Frameworks/CoreNFC.framework; sourceTree = SDKROOT; };
+		A1000012000 /* FamilyControls.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FamilyControls.framework; path = System/Library/Frameworks/FamilyControls.framework; sourceTree = SDKROOT; };
+		A1000013000 /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
+		A1000014000 /* DeviceActivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceActivity.framework; path = System/Library/Frameworks/DeviceActivity.framework; sourceTree = SDKROOT; };
+		A1000015000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1000016000 /* Untap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Untap.entitlements; sourceTree = "<group>"; };
+		A1000020000 /* Untap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Untap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		77FEDFF92FBCD1B100B11692 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 77FEDFEC2FBCD1B000B11692 /* UntapShieldConfig */;
+		};
+		77FEE00C2FBCD1DA00B11692 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 77FEE0012FBCD1DA00B11692 /* UntapShieldAction */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		77FEDFF12FBCD1B000B11692 /* UntapShieldConfig */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (77FEDFF92FBCD1B100B11692 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UntapShieldConfig; sourceTree = "<group>"; };
+		77FEE0042FBCD1DA00B11692 /* UntapShieldAction */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (77FEE00C2FBCD1DA00B11692 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UntapShieldAction; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		77FEDFEA2FBCD1B000B11692 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77FEDFEE2FBCD1B000B11692 /* ManagedSettings.framework in Frameworks */,
+				77FEDFF02FBCD1B000B11692 /* ManagedSettingsUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77FEDFFF2FBCD1DA00B11692 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77FEE0032FBCD1DA00B11692 /* ManagedSettings.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A100001D000 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000011001 /* CoreNFC.framework in Frameworks */,
+				A1000012001 /* FamilyControls.framework in Frameworks */,
+				A1000013001 /* ManagedSettings.framework in Frameworks */,
+				A1000014001 /* DeviceActivity.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		77FEDFE42FBCD07300B11692 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				77FEDFE52FBCD09400B11692 /* PersistenceController.swift */,
+				77FEDFE72FBCD09500B11692 /* SessionManager.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		A100001A000 = {
+			isa = PBXGroup;
+			children = (
+				A100001B000 /* Untap */,
+				77FEDFF12FBCD1B000B11692 /* UntapShieldConfig */,
+				77FEE0042FBCD1DA00B11692 /* UntapShieldAction */,
+				A100001C000 /* Frameworks */,
+				A100001F000 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A100001B000 /* Untap */ = {
+			isa = PBXGroup;
+			children = (
+				A1000001000 /* UntapApp.swift */,
+				A1000002000 /* ContentView.swift */,
+				A1000003000 /* Theme.swift */,
+				A1000021000 /* Views */,
+				A1000022000 /* Managers */,
+				A1000010000 /* Assets.xcassets */,
+				A1000015000 /* Info.plist */,
+				A1000016000 /* Untap.entitlements */,
+				77FEDFE42FBCD07300B11692 /* Persistence */,
+			);
+			path = Untap;
+			sourceTree = "<group>";
+		};
+		A100001C000 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A1000011000 /* CoreNFC.framework */,
+				A1000012000 /* FamilyControls.framework */,
+				A1000013000 /* ManagedSettings.framework */,
+				A1000014000 /* DeviceActivity.framework */,
+				77FEDFEF2FBCD1B000B11692 /* ManagedSettingsUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A100001F000 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000020000 /* Untap.app */,
+				77FEDFED2FBCD1B000B11692 /* UntapShieldConfig.appex */,
+				77FEE0022FBCD1DA00B11692 /* UntapShieldAction.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1000021000 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A1000004000 /* HomeView.swift */,
+				A1000005000 /* BlocksView.swift */,
+				A1000006000 /* SocialView.swift */,
+				A1000007000 /* ProfileView.swift */,
+				77FEDFE12FBCD03800B11692 /* SessionSummaryView.swift */,
+				77FEE0102FBCD2B600B11692 /* StreakView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A1000022000 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				A1000008000 /* NFCManager.swift */,
+				A1000009000 /* AppBlockingManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		77FEDFEC2FBCD1B000B11692 /* UntapShieldConfig */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77FEDFFA2FBCD1B100B11692 /* Build configuration list for PBXNativeTarget "UntapShieldConfig" */;
+			buildPhases = (
+				77FEDFE92FBCD1B000B11692 /* Sources */,
+				77FEDFEA2FBCD1B000B11692 /* Frameworks */,
+				77FEDFEB2FBCD1B000B11692 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				77FEDFF12FBCD1B000B11692 /* UntapShieldConfig */,
+			);
+			name = UntapShieldConfig;
+			packageProductDependencies = (
+			);
+			productName = UntapShieldConfig;
+			productReference = 77FEDFED2FBCD1B000B11692 /* UntapShieldConfig.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		77FEE0012FBCD1DA00B11692 /* UntapShieldAction */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77FEE00D2FBCD1DA00B11692 /* Build configuration list for PBXNativeTarget "UntapShieldAction" */;
+			buildPhases = (
+				77FEDFFE2FBCD1DA00B11692 /* Sources */,
+				77FEDFFF2FBCD1DA00B11692 /* Frameworks */,
+				77FEE0002FBCD1DA00B11692 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				77FEE0042FBCD1DA00B11692 /* UntapShieldAction */,
+			);
+			name = UntapShieldAction;
+			packageProductDependencies = (
+			);
+			productName = UntapShieldAction;
+			productReference = 77FEE0022FBCD1DA00B11692 /* UntapShieldAction.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		A100001E000 /* Untap */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000023000 /* Build configuration list for PBXNativeTarget "Untap" */;
+			buildPhases = (
+				A100001C001 /* Sources */,
+				A100001D000 /* Frameworks */,
+				A100001D001 /* Resources */,
+				77FEDFFD2FBCD1B100B11692 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				77FEDFF72FBCD1B100B11692 /* PBXTargetDependency */,
+				77FEE00A2FBCD1DA00B11692 /* PBXTargetDependency */,
+			);
+			name = Untap;
+			productName = Untap;
+			productReference = A1000020000 /* Untap.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1000019000 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2640;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					77FEDFEC2FBCD1B000B11692 = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
+					77FEE0012FBCD1DA00B11692 = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
+					A100001E000 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = A1000024000 /* Build configuration list for PBXProject "Untap" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A100001A000;
+			productRefGroup = A100001F000 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A100001E000 /* Untap */,
+				77FEDFEC2FBCD1B000B11692 /* UntapShieldConfig */,
+				77FEE0012FBCD1DA00B11692 /* UntapShieldAction */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		77FEDFEB2FBCD1B000B11692 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77FEE0002FBCD1DA00B11692 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A100001D001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000010001 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		77FEDFE92FBCD1B000B11692 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77FEDFFE2FBCD1DA00B11692 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A100001C001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001001 /* UntapApp.swift in Sources */,
+				A1000002001 /* ContentView.swift in Sources */,
+				77FEDFE82FBCD09500B11692 /* SessionManager.swift in Sources */,
+				A1000003001 /* Theme.swift in Sources */,
+				A1000004001 /* HomeView.swift in Sources */,
+				77FEDFE62FBCD09400B11692 /* PersistenceController.swift in Sources */,
+				77FEDFE22FBCD03800B11692 /* SessionSummaryView.swift in Sources */,
+				A1000005001 /* BlocksView.swift in Sources */,
+				A1000006001 /* SocialView.swift in Sources */,
+				A1000007001 /* ProfileView.swift in Sources */,
+				A1000008001 /* NFCManager.swift in Sources */,
+				A1000009001 /* AppBlockingManager.swift in Sources */,
+				77FEE0112FBCD2B600B11692 /* StreakView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		77FEDFF72FBCD1B100B11692 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 77FEDFEC2FBCD1B000B11692 /* UntapShieldConfig */;
+			targetProxy = 77FEDFF62FBCD1B100B11692 /* PBXContainerItemProxy */;
+		};
+		77FEE00A2FBCD1DA00B11692 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 77FEE0012FBCD1DA00B11692 /* UntapShieldAction */;
+			targetProxy = 77FEE0092FBCD1DA00B11692 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		77FEDFFB2FBCD1B100B11692 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = UntapShieldConfig/UntapShieldConfig.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H33286Q29S;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = UntapShieldConfig/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = UntapShieldConfig;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andy.Untap.UntapShieldConfig;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		77FEDFFC2FBCD1B100B11692 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = UntapShieldConfig/UntapShieldConfig.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H33286Q29S;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = UntapShieldConfig/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = UntapShieldConfig;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andy.Untap.UntapShieldConfig;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		77FEE00E2FBCD1DA00B11692 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = UntapShieldAction/UntapShieldAction.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H33286Q29S;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = UntapShieldAction/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = UntapShieldAction;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andy.Untap.UntapShieldAction;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		77FEE00F2FBCD1DA00B11692 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = UntapShieldAction/UntapShieldAction.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H33286Q29S;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = UntapShieldAction/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = UntapShieldAction;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andy.Untap.UntapShieldAction;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A1000025000 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A1000026000 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A1000027000 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Untap/Untap.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H33286Q29S;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Untap/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Untap;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andy.Untap;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A1000028000 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Untap/Untap.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H33286Q29S;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Untap/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Untap;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andy.Untap;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		77FEDFFA2FBCD1B100B11692 /* Build configuration list for PBXNativeTarget "UntapShieldConfig" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77FEDFFB2FBCD1B100B11692 /* Debug */,
+				77FEDFFC2FBCD1B100B11692 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		77FEE00D2FBCD1DA00B11692 /* Build configuration list for PBXNativeTarget "UntapShieldAction" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77FEE00E2FBCD1DA00B11692 /* Debug */,
+				77FEE00F2FBCD1DA00B11692 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000023000 /* Build configuration list for PBXNativeTarget "Untap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000027000 /* Debug */,
+				A1000028000 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000024000 /* Build configuration list for PBXProject "Untap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000025000 /* Debug */,
+				A1000026000 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A1000019000 /* Project object */;
+}
