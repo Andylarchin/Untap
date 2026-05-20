@@ -14,9 +14,6 @@ struct BlocksView: View {
                     tagCount: nfcManager.pairedTags.count
                 )
 
-                TestModeButton()
-                    .environmentObject(appBlocker)
-
                 NFCTagsCard(nfcManager: nfcManager)
 
                 Text("Rules")
@@ -357,78 +354,6 @@ struct AppPickerView: View {
                     }
                 }
             }
-        }
-    }
-}
-
-// MARK: - Test Mode Button
-struct TestModeButton: View {
-    @EnvironmentObject var appBlocker: AppBlockingManager
-    @State private var showAppPicker = false
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Quick Block")
-                .monoLabel()
-                .padding(.horizontal, 16)
-
-            Button {
-                appBlocker.toggleBlocking()
-            } label: {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(appBlocker.isBlockingEnabled ? "Deactivate Blocking" : "Activate Blocking")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(.ink)
-
-                        Text(appBlocker.isBlockingEnabled ? "Selected apps are currently blocked" : "Tap to block selected apps")
-                            .font(.system(size: 13))
-                            .foregroundColor(.ink3)
-                    }
-
-                    Spacer()
-
-                    ZStack {
-                        Circle()
-                            .fill(appBlocker.isBlockingEnabled ? Color.sage : Color.bg2)
-                            .frame(width: 50, height: 50)
-
-                        Image(systemName: appBlocker.isBlockingEnabled ? "lock.fill" : "lock.open.fill")
-                            .font(.system(size: 22))
-                            .foregroundColor(appBlocker.isBlockingEnabled ? .white : .ink3)
-                    }
-                }
-                .padding(16)
-                .background(appBlocker.isBlockingEnabled ? Color.sageSoft : Color.card)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(appBlocker.isBlockingEnabled ? Color.sage : Color.line, lineWidth: 2)
-                )
-            }
-            .padding(.horizontal, 16)
-
-            Button {
-                showAppPicker = true
-            } label: {
-                HStack {
-                    Image(systemName: "square.grid.3x3.fill")
-                        .font(.system(size: 14))
-                    Text("Select Apps to Block")
-                        .font(.system(size: 14, weight: .medium))
-                }
-                .foregroundColor(.ink)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 12)
-                .background(Color.bg2)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .padding(.horizontal, 16)
-        }
-        .padding(.bottom, 16)
-        .sheet(isPresented: $showAppPicker) {
-            AppPickerView()
-                .environmentObject(appBlocker)
         }
     }
 }
