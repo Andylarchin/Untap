@@ -49,6 +49,10 @@ struct HomeView: View {
     }
 
     private func handleTap() {
+        guard nfcManager.hasPairedTags else {
+            nfcManager.errorMessage = "Pair a tag first in the Blocks tab"
+            return
+        }
         nfcManager.startScanning()
     }
 
@@ -131,7 +135,7 @@ struct TapHeroView: View {
 
     @State private var animateRipple = false
     @State private var now = Date()
-    private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     private var todayMinutes: Int {
         sessionManager.todayTotalMinutesSaved()

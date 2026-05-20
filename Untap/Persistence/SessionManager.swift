@@ -15,6 +15,14 @@ class SessionManager: ObservableObject {
         loadActiveSession()
     }
 
+    // MARK: - Refresh
+
+    func refresh() {
+        context.refreshAllObjects()
+        loadActiveSession()
+        objectWillChange.send()
+    }
+
     // MARK: - Session Lifecycle
 
     func startSession() -> CDBlockSession {

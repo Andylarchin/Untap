@@ -82,7 +82,10 @@ struct BlocksHeaderView: View {
 
 // MARK: - NFC Tags Card
 struct NFCTagsCard: View {
-    var nfcManager: NFCManager
+    @ObservedObject var nfcManager: NFCManager
+    @State private var showNamingSheet = false
+    @State private var pendingTagId: String?
+    @State private var tagName = ""
 
     var body: some View {
         VStack(spacing: 0) {
@@ -99,6 +102,7 @@ struct NFCTagsCard: View {
                 Spacer()
 
                 Button {
+                    nfcManager.startPairing()
                 } label: {
                     HStack(spacing: 4) {
                         Image(systemName: "plus")
@@ -132,13 +136,11 @@ struct NFCTagsCard: View {
                     Spacer()
                 }
             } else {
-                ForEach(Array(nfcManager.pairedTags.enumerated()), id: \.element.id) { index, tag in
-                    NFCTagRow(tag: tag)
-                        .padding(.vertical, 10)
-
-                    if index < nfcManager.pairedTags.count - 1 {
-                        Divider()
+                ForEach(nfcManager.pairedTags) { tag in
+                    NFCTagRow(tag: tag) {
+                        nfcManager.unpairTag(tag)
                     }
+                    .padding(.vertical, 10)
                 }
             }
         }
@@ -147,11 +149,33 @@ struct NFCTagsCard: View {
         .cardStyle()
         .padding(.horizontal, 16)
         .padding(.bottom, 14)
+        .onChange(of: nfcManager.lastPairedTagId) { _, newValue in
+            if let id = newValue {
+                pendingTagId = id
+                tagName = ""
+                showNamingSheet = true
+                nfcManager.lastPairedTagId = nil
+            }
+        }
+        .sheet(isPresented: $showNamingSheet) {
+            TagNamingSheet(tagName: $tagName) {
+                if let id = pendingTagId {
+                    let name = tagName.trimmingCharacters(in: .whitespaces)
+                    nfcManager.pairTag(
+                        identifier: id,
+                        name: name.isEmpty ? "My Tag" : name
+                    )
+                    pendingTagId = nil
+                }
+                showNamingSheet = false
+            }
+        }
     }
 }
 
 struct NFCTagRow: View {
     let tag: PairedNFCTag
+    var onDelete: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
@@ -176,10 +200,77 @@ struct NFCTagRow: View {
 
             Spacer()
 
-            Image(systemName: "chevron.right")
-                .font(.system(size: 14))
-                .foregroundColor(.ink3)
+            Button(role: .destructive) {
+                onDelete()
+            } label: {
+                Image(systemName: "trash")
+                    .font(.system(size: 14))
+                    .foregroundColor(.ink3)
+            }
         }
+    }
+}
+
+// MARK: - Tag Naming Sheet
+struct TagNamingSheet: View {
+    @Binding var tagName: String
+    var onSave: () -> Void
+    @FocusState private var isFocused: Bool
+
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 24) {
+                VStack(spacing: 8) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.sageSoft)
+                            .frame(width: 80, height: 80)
+
+                        Image(systemName: "wave.3.right")
+                            .font(.system(size: 34))
+                            .foregroundColor(.sageDeep)
+                    }
+
+                    Text("Tag detected")
+                        .font(.instrumentSerif(size: 28))
+                        .foregroundColor(.ink)
+
+                    Text("Give this tag a name so you can identify it")
+                        .font(.system(size: 14))
+                        .foregroundColor(.ink3)
+                }
+                .padding(.top, 20)
+
+                TextField("e.g. Desk tag, Bedroom tag", text: $tagName)
+                    .font(.system(size: 16))
+                    .padding(14)
+                    .background(Color.bg2)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal, 24)
+                    .focused($isFocused)
+
+                Button {
+                    onSave()
+                } label: {
+                    Text("Pair this tag")
+                        .font(.geist(size: 15, weight: .semibold))
+                        .foregroundColor(.bg)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(Color.ink)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
+                .padding(.horizontal, 24)
+
+                Spacer()
+            }
+            .background(Color.bg)
+            .navigationBarTitleDisplayMode(.inline)
+        }
+        .onAppear {
+            isFocused = true
+        }
+        .presentationDetents([.medium])
     }
 }
 

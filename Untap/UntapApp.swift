@@ -22,6 +22,8 @@ struct UntapApp: App {
                 .onChange(of: scenePhase) { _, newPhase in
                     if newPhase == .active {
                         sessionManager.syncAttemptsFromExtension()
+                        sessionManager.refresh()
+                        appBlocker.objectWillChange.send()
                     }
                 }
         }
