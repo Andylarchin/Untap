@@ -2,6 +2,7 @@ import SwiftUI
 
 struct StreakView: View {
     @EnvironmentObject var sessionManager: SessionManager
+    @State private var selectedDate: Date?
 
     var body: some View {
         ScrollView {
@@ -19,18 +20,21 @@ struct StreakView: View {
                     .foregroundColor(.ink)
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 20)
+                .padding(.top, 28)
                 .padding(.bottom, 14)
 
                 StreakHeroCard(sessionManager: sessionManager)
 
-                HeatmapCalendarCard(sessionManager: sessionManager)
+                HeatmapCalendarCard(sessionManager: sessionManager, selectedDate: $selectedDate)
 
-                ProgressStatsCard(sessionManager: sessionManager)
+                if let date = selectedDate {
+                    DayDetailCard(sessionManager: sessionManager, date: date)
+                }
 
                 MilestonesCard(sessionManager: sessionManager)
             }
             .padding(.bottom, 100)
+            .animation(.spring(response: 0.3), value: selectedDate)
         }
         .background(Color.bg)
     }
@@ -137,8 +141,11 @@ struct StreakHeroCard: View {
 // MARK: - Heatmap Calendar
 struct HeatmapCalendarCard: View {
     var sessionManager: SessionManager
+    @Binding var selectedDate: Date?
 
     private let weeksToShow = 12
+    private let cellSize: CGFloat = 16
+    private let cellSpacing: CGFloat = 3
     private let cal = Calendar.current
 
     private var heatmapData: [Date: Int] {
@@ -166,7 +173,7 @@ struct HeatmapCalendarCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 14) {
             HStack {
                 HStack(spacing: 8) {
                     Image(systemName: "calendar")
@@ -183,27 +190,24 @@ struct HeatmapCalendarCard: View {
                     .foregroundColor(.ink3)
             }
 
-            // Heatmap grid
-            HStack(alignment: .top, spacing: 3) {
-                // Day labels
-                VStack(alignment: .trailing, spacing: 3) {
+            HStack(alignment: .top, spacing: cellSpacing) {
+                VStack(alignment: .trailing, spacing: cellSpacing) {
                     ForEach(0..<7, id: \.self) { day in
                         if day == 1 || day == 3 || day == 5 {
                             Text(dayLabel(day))
-                                .font(.geistMono(size: 8))
+                                .font(.geistMono(size: 9))
                                 .foregroundColor(.ink3)
-                                .frame(height: 12)
+                                .frame(height: cellSize)
                         } else {
-                            Color.clear.frame(height: 12)
+                            Color.clear.frame(height: cellSize)
                         }
                     }
                 }
-                .frame(width: 16)
+                .frame(width: 18)
 
-                // Grid columns (weeks)
-                HStack(spacing: 3) {
+                HStack(spacing: cellSpacing) {
                     ForEach(0..<weeksToShow, id: \.self) { week in
-                        VStack(spacing: 3) {
+                        VStack(spacing: cellSpacing) {
                             ForEach(0..<7, id: \.self) { day in
                                 let index = week * 7 + day
                                 if index < gridDays.count {
@@ -211,16 +215,30 @@ struct HeatmapCalendarCard: View {
                                     let minutes = heatmapData[date] ?? 0
                                     let today = cal.startOfDay(for: Date())
                                     let isFuture = date > today
+                                    let isSelected = selectedDate.map { cal.isDate($0, inSameDayAs: date) } ?? false
 
-                                    RoundedRectangle(cornerRadius: 2)
+                                    RoundedRectangle(cornerRadius: 3)
                                         .fill(isFuture ? Color.clear : cellColor(minutes: minutes))
-                                        .frame(width: 12, height: 12)
+                                        .frame(width: cellSize, height: cellSize)
                                         .overlay(
-                                            RoundedRectangle(cornerRadius: 2)
-                                                .stroke(isFuture ? Color.line.opacity(0.3) : Color.clear, lineWidth: 0.5)
+                                            RoundedRectangle(cornerRadius: 3)
+                                                .stroke(
+                                                    isSelected ? Color.ink : (isFuture ? Color.line.opacity(0.3) : Color.clear),
+                                                    lineWidth: isSelected ? 2 : 0.5
+                                                )
                                         )
+                                        .onTapGesture {
+                                            guard !isFuture else { return }
+                                            withAnimation(.spring(response: 0.25)) {
+                                                if isSelected {
+                                                    selectedDate = nil
+                                                } else {
+                                                    selectedDate = date
+                                                }
+                                            }
+                                        }
                                 } else {
-                                    Color.clear.frame(width: 12, height: 12)
+                                    Color.clear.frame(width: cellSize, height: cellSize)
                                 }
                             }
                         }
@@ -228,33 +246,39 @@ struct HeatmapCalendarCard: View {
                 }
             }
 
-            // Legend
             HStack(spacing: 12) {
+                if selectedDate == nil {
+                    Text("Tap a day for details")
+                        .font(.geistMono(size: 9))
+                        .foregroundColor(.ink3)
+                }
+
                 Spacer()
+
                 Text("Less")
-                    .font(.geistMono(size: 8))
+                    .font(.geistMono(size: 9))
                     .foregroundColor(.ink3)
 
                 HStack(spacing: 2) {
-                    RoundedRectangle(cornerRadius: 2)
+                    RoundedRectangle(cornerRadius: 2.5)
                         .fill(Color.bg2)
-                        .frame(width: 10, height: 10)
-                    RoundedRectangle(cornerRadius: 2)
-                        .fill(Color.sage.opacity(0.25))
-                        .frame(width: 10, height: 10)
-                    RoundedRectangle(cornerRadius: 2)
-                        .fill(Color.sage.opacity(0.5))
-                        .frame(width: 10, height: 10)
-                    RoundedRectangle(cornerRadius: 2)
-                        .fill(Color.sage.opacity(0.75))
-                        .frame(width: 10, height: 10)
-                    RoundedRectangle(cornerRadius: 2)
+                        .frame(width: 12, height: 12)
+                    RoundedRectangle(cornerRadius: 2.5)
+                        .fill(Color(hex: "C8D4C0"))
+                        .frame(width: 12, height: 12)
+                    RoundedRectangle(cornerRadius: 2.5)
+                        .fill(Color(hex: "A3B898"))
+                        .frame(width: 12, height: 12)
+                    RoundedRectangle(cornerRadius: 2.5)
                         .fill(Color.sage)
-                        .frame(width: 10, height: 10)
+                        .frame(width: 12, height: 12)
+                    RoundedRectangle(cornerRadius: 2.5)
+                        .fill(Color.sageDeep)
+                        .frame(width: 12, height: 12)
                 }
 
                 Text("More")
-                    .font(.geistMono(size: 8))
+                    .font(.geistMono(size: 9))
                     .foregroundColor(.ink3)
             }
         }
@@ -267,10 +291,10 @@ struct HeatmapCalendarCard: View {
     private func cellColor(minutes: Int) -> Color {
         guard minutes > 0 else { return Color.bg2 }
         let ratio = Double(minutes) / Double(maxMinutes)
-        if ratio < 0.25 { return Color.sage.opacity(0.25) }
-        if ratio < 0.5 { return Color.sage.opacity(0.5) }
-        if ratio < 0.75 { return Color.sage.opacity(0.75) }
-        return Color.sage
+        if ratio < 0.25 { return Color(hex: "C8D4C0") }
+        if ratio < 0.5 { return Color(hex: "A3B898") }
+        if ratio < 0.75 { return Color.sage }
+        return Color.sageDeep
     }
 
     private func dayLabel(_ day: Int) -> String {
@@ -283,51 +307,83 @@ struct HeatmapCalendarCard: View {
     }
 }
 
-// MARK: - Progress Stats
-struct ProgressStatsCard: View {
+// MARK: - Day Detail
+struct DayDetailCard: View {
     var sessionManager: SessionManager
+    let date: Date
+
+    private var minutesSaved: Int { sessionManager.minutesSavedForDate(date) }
+    private var sessionCount: Int { sessionManager.sessionsForDate(date).count }
+    private var topApps: [(appName: String, count: Int)] { sessionManager.attemptCountsByAppForDate(date) }
+    private var totalAttempts: Int { sessionManager.totalAttemptsForDate(date) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("All time")
-                .monoLabel()
+            Text(date, format: .dateTime.weekday(.wide).month(.abbreviated).day())
+                .font(.instrumentSerif(size: 22))
+                .foregroundColor(.ink)
 
             HStack(spacing: 0) {
                 VStack(spacing: 4) {
                     HStack(alignment: .lastTextBaseline, spacing: 2) {
-                        Text("\(sessionManager.allTimeTotalMinutesSaved() / 60)")
-                            .font(.instrumentSerif(size: 32))
+                        Text("\(minutesSaved / 60)")
+                            .font(.instrumentSerif(size: 28))
                             .foregroundColor(.ink)
-                        Text("h")
-                            .font(.instrumentSerifItalic(size: 16))
+                        Text("h \(minutesSaved % 60)m")
+                            .font(.instrumentSerifItalic(size: 14))
                             .foregroundColor(.ink2)
                     }
-                    Text("Time saved")
+                    Text("Blocked")
                         .monoLabel()
                 }
                 .frame(maxWidth: .infinity)
 
-                Divider().frame(height: 40)
+                Divider().frame(height: 36)
 
                 VStack(spacing: 4) {
-                    Text("\(sessionManager.allTimeSessionCount())")
-                        .font(.instrumentSerif(size: 32))
+                    Text("\(sessionCount)")
+                        .font(.instrumentSerif(size: 28))
                         .foregroundColor(.ink)
                     Text("Sessions")
                         .monoLabel()
                 }
                 .frame(maxWidth: .infinity)
 
-                Divider().frame(height: 40)
+                Divider().frame(height: 36)
 
                 VStack(spacing: 4) {
-                    Text("\(sessionManager.allTimeTotalAttempts())")
-                        .font(.instrumentSerif(size: 32))
+                    Text("\(totalAttempts)")
+                        .font(.instrumentSerif(size: 28))
                         .foregroundColor(.ink)
-                    Text("Blocked")
+                    Text("Attempts")
                         .monoLabel()
                 }
                 .frame(maxWidth: .infinity)
+            }
+
+            if !topApps.isEmpty {
+                Divider()
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Most blocked")
+                        .monoLabel()
+
+                    ForEach(topApps.prefix(5), id: \.appName) { app in
+                        HStack(spacing: 10) {
+                            AppIconView(name: app.appName, size: 26)
+
+                            Text(app.appName)
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(.ink)
+
+                            Spacer()
+
+                            Text("\(app.count)")
+                                .font(.geistMono(size: 13))
+                                .foregroundColor(.ink3)
+                        }
+                    }
+                }
             }
         }
         .padding(18)

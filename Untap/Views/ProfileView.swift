@@ -137,7 +137,7 @@ struct ProfileHeaderView: View {
                     .clipShape(Capsule())
             }
         }
-        .padding(.top, 36)
+        .padding(.top, 44)
         .padding(.bottom, 24)
     }
 }

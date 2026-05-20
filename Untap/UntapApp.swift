@@ -11,6 +11,7 @@ struct UntapApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(.light)
                 .environmentObject(appBlocker)
                 .environmentObject(nfcManager)
                 .environmentObject(sessionManager)

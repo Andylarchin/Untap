@@ -101,6 +101,54 @@ class SessionManager: ObservableObject {
         return (try? context.fetch(request)) ?? []
     }
 
+    // MARK: - Date-Specific Queries
+
+    func sessionsForDate(_ date: Date) -> [CDBlockSession] {
+        let request: NSFetchRequest<CDBlockSession> = CDBlockSession.fetchRequest()
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        request.predicate = NSPredicate(format: "startDate >= %@ AND startDate < %@", startOfDay as NSDate, endOfDay as NSDate)
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \CDBlockSession.startDate, ascending: false)]
+        return (try? context.fetch(request)) ?? []
+    }
+
+    func minutesSavedForDate(_ date: Date) -> Int {
+        let sessions = sessionsForDate(date)
+        var total: TimeInterval = 0
+        for session in sessions {
+            let end = session.endDate ?? Date()
+            let start = session.startDate ?? Date()
+            total += end.timeIntervalSince(start)
+        }
+        return Int(total / 60)
+    }
+
+    func attemptCountsByAppForDate(_ date: Date) -> [(appName: String, count: Int)] {
+        let request: NSFetchRequest<CDBlockAttempt> = CDBlockAttempt.fetchRequest()
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+        let attempts = (try? context.fetch(request)) ?? []
+        var counts: [String: Int] = [:]
+        for attempt in attempts {
+            let name = attempt.appDisplayName ?? "Unknown"
+            counts[name, default: 0] += 1
+        }
+        return counts.map { (appName: $0.key, count: $0.value) }
+            .sorted { $0.count > $1.count }
+    }
+
+    func totalAttemptsForDate(_ date: Date) -> Int {
+        let request: NSFetchRequest<CDBlockAttempt> = CDBlockAttempt.fetchRequest()
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        request.predicate = NSPredicate(format: "timestamp >= %@ AND timestamp < %@", startOfDay as NSDate, endOfDay as NSDate)
+        return (try? context.count(for: request)) ?? 0
+    }
+
     func todayAttemptCountsByApp() -> [(appName: String, count: Int)] {
         let attempts = todayAttempts()
         var counts: [String: Int] = [:]

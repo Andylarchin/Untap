@@ -5,6 +5,7 @@ struct BlocksView: View {
     @EnvironmentObject var appBlocker: AppBlockingManager
     @EnvironmentObject var nfcManager: NFCManager
     @State private var showAppPicker = false
+    @State private var showNewRule = false
 
     var body: some View {
         ScrollView {
@@ -27,9 +28,17 @@ struct BlocksView: View {
                     RuleCardView(rule: rule) {
                         appBlocker.toggleRule(rule)
                     }
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            appBlocker.removeRule(rule)
+                        } label: {
+                            Label("Delete Rule", systemImage: "trash")
+                        }
+                    }
                 }
 
                 Button {
+                    showNewRule = true
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "plus")
@@ -55,6 +64,10 @@ struct BlocksView: View {
         .sheet(isPresented: $showAppPicker) {
             AppPickerView()
         }
+        .sheet(isPresented: $showNewRule) {
+            NewRuleSheet()
+                .environmentObject(appBlocker)
+        }
     }
 }
 
@@ -77,7 +90,7 @@ struct BlocksHeaderView: View {
                 .foregroundColor(.ink)
         }
         .padding(.horizontal, 20)
-        .padding(.top, 20)
+        .padding(.top, 28)
         .padding(.bottom, 14)
     }
 }
@@ -118,6 +131,23 @@ struct AppSelectionCard: View {
                 Text("Choose which apps get blocked during sessions")
                     .font(.system(size: 13))
                     .foregroundColor(.ink3)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(Array(appBlocker.selectedApps.applicationTokens), id: \.self) { token in
+                            Label(token)
+                                .labelStyle(.iconOnly)
+                                .frame(width: 34, height: 34)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                        ForEach(Array(appBlocker.selectedApps.categoryTokens), id: \.self) { token in
+                            Label(token)
+                                .labelStyle(.iconOnly)
+                                .frame(width: 34, height: 34)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                    }
+                }
             }
 
             Button {
@@ -506,6 +536,96 @@ struct AppPickerView: View {
                     Button("Done") {
                         dismiss()
                     }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - New Rule Sheet
+struct NewRuleSheet: View {
+    @EnvironmentObject var appBlocker: AppBlockingManager
+    @Environment(\.dismiss) var dismiss
+    @State private var name = ""
+    @State private var ruleDescription = ""
+    @State private var selectedColorHex = "7A8F6A"
+
+    private let colorOptions = [
+        "7A8F6A", "C97B6E", "D68A3C", "6B8FA6", "8A6B9F", "5A8F8A"
+    ]
+
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 24) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Rule name")
+                        .font(.system(size: 12))
+                        .foregroundColor(.ink3)
+                    TextField("e.g. Morning focus", text: $name)
+                        .font(.system(size: 16))
+                        .padding(14)
+                        .background(Color.bg2)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Description")
+                        .font(.system(size: 12))
+                        .foregroundColor(.ink3)
+                    TextField("e.g. Deep work before noon", text: $ruleDescription)
+                        .font(.system(size: 16))
+                        .padding(14)
+                        .background(Color.bg2)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Color")
+                        .font(.system(size: 12))
+                        .foregroundColor(.ink3)
+
+                    HStack(spacing: 12) {
+                        ForEach(colorOptions, id: \.self) { hex in
+                            Circle()
+                                .fill(Color(hex: hex))
+                                .frame(width: 32, height: 32)
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.ink, lineWidth: selectedColorHex == hex ? 2 : 0)
+                                )
+                                .onTapGesture {
+                                    selectedColorHex = hex
+                                }
+                        }
+                    }
+                }
+
+                Spacer()
+            }
+            .padding(24)
+            .background(Color.bg)
+            .navigationTitle("New Rule")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Create") {
+                        let rule = BlockingRule(
+                            id: UUID(),
+                            name: name.isEmpty ? "New Rule" : name,
+                            description: ruleDescription.isEmpty ? "Custom blocking rule" : ruleDescription,
+                            apps: [],
+                            appSelection: nil,
+                            schedule: "Custom",
+                            isActive: false,
+                            accentColorHex: selectedColorHex
+                        )
+                        appBlocker.addRule(rule)
+                        dismiss()
+                    }
+                    .fontWeight(.semibold)
                 }
             }
         }
