@@ -116,23 +116,16 @@ struct HeatmapCalendarCard: View {
     private let cellSpacing: CGFloat = 3
     private let cal = Calendar.current
 
-    private var installDate: Date {
-        UserDefaults.standard.object(forKey: "appInstallDate") as? Date ?? Date()
-    }
-
-    private var weeksCount: Int {
-        let days = cal.dateComponents([.day], from: cal.startOfDay(for: installDate), to: cal.startOfDay(for: Date())).day ?? 0
-        return max(min((days / 7) + 2, 16), 2)
-    }
+    private let totalWeeks = 12
 
     private var cellSize: CGFloat {
         let available = UIScreen.main.bounds.width - 93
-        let size = (available - CGFloat(max(weeksCount - 1, 0)) * cellSpacing) / CGFloat(max(weeksCount, 1))
+        let size = (available - CGFloat(totalWeeks - 1) * cellSpacing) / CGFloat(totalWeeks)
         return min(max(size, 12), 22)
     }
 
     private var heatmapData: [Date: Int] {
-        sessionManager.minutesByDay(weeks: weeksCount)
+        sessionManager.minutesByDay(weeks: 1)
     }
 
     private var maxMinutes: Int {
@@ -142,12 +135,11 @@ struct HeatmapCalendarCard: View {
     private var gridDays: [Date] {
         let today = cal.startOfDay(for: Date())
         let todayWeekday = cal.component(.weekday, from: today)
-        let endOfWeek = cal.date(byAdding: .day, value: 7 - todayWeekday, to: today)!
-        guard let startDate = cal.date(byAdding: .day, value: -(weeksCount * 7 - 1), to: endOfWeek) else { return [] }
+        guard let startDate = cal.date(byAdding: .day, value: -(todayWeekday - 1), to: today) else { return [] }
 
         var days: [Date] = []
         var current = startDate
-        while current <= endOfWeek {
+        for _ in 0..<(totalWeeks * 7) {
             days.append(current)
             current = cal.date(byAdding: .day, value: 1, to: current)!
         }
@@ -167,7 +159,7 @@ struct HeatmapCalendarCard: View {
 
                 Spacer()
 
-                Text("Last \(weeksCount) weeks")
+                Text("12-week journey")
                     .font(.geistMono(size: 10))
                     .foregroundColor(.ink3)
             }
@@ -188,7 +180,7 @@ struct HeatmapCalendarCard: View {
                 .frame(width: 18)
 
                 HStack(spacing: cellSpacing) {
-                    ForEach(0..<weeksCount, id: \.self) { week in
+                    ForEach(0..<totalWeeks, id: \.self) { week in
                         VStack(spacing: cellSpacing) {
                             ForEach(0..<7, id: \.self) { day in
                                 let index = week * 7 + day
@@ -197,6 +189,7 @@ struct HeatmapCalendarCard: View {
                                     let minutes = heatmapData[date] ?? 0
                                     let today = cal.startOfDay(for: Date())
                                     let isFuture = date > today
+                                    let isToday = cal.isDate(date, inSameDayAs: today)
                                     let isSelected = selectedDate.map { cal.isDate($0, inSameDayAs: date) } ?? false
 
                                     RoundedRectangle(cornerRadius: 3)
@@ -205,8 +198,8 @@ struct HeatmapCalendarCard: View {
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 3)
                                                 .stroke(
-                                                    isSelected ? Color.ink : (isFuture ? Color.line.opacity(0.3) : Color.clear),
-                                                    lineWidth: isSelected ? 2 : 0.5
+                                                    isSelected ? Color.ink : (isToday ? Color.sage : (isFuture ? Color.line.opacity(0.3) : Color.clear)),
+                                                    lineWidth: isSelected ? 2 : (isToday ? 1.5 : 0.5)
                                                 )
                                         )
                                         .onTapGesture {
