@@ -16,6 +16,8 @@ struct BlocksView: View {
 
                 NFCTagsCard(nfcManager: nfcManager)
 
+                AppSelectionCard(showAppPicker: $showAppPicker, appBlocker: appBlocker)
+
                 Text("Rules")
                     .monoLabel()
                     .padding(.horizontal, 16)
@@ -75,7 +77,68 @@ struct BlocksHeaderView: View {
                 .foregroundColor(.ink)
         }
         .padding(.horizontal, 20)
-        .padding(.top, 8)
+        .padding(.top, 20)
+        .padding(.bottom, 14)
+    }
+}
+
+// MARK: - App Selection Card
+struct AppSelectionCard: View {
+    @Binding var showAppPicker: Bool
+    @ObservedObject var appBlocker: AppBlockingManager
+
+    private var selectedCount: Int {
+        appBlocker.selectedApps.applicationTokens.count +
+        appBlocker.selectedApps.categoryTokens.count +
+        appBlocker.selectedApps.webDomainTokens.count
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                HStack(spacing: 8) {
+                    Image(systemName: "square.grid.3x3.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(.ink2)
+
+                    Text("Apps to block")
+                        .monoLabel()
+                }
+
+                Spacer()
+
+                if selectedCount > 0 {
+                    Text("\(selectedCount) selected")
+                        .font(.geistMono(size: 11))
+                        .foregroundColor(.sageDeep)
+                }
+            }
+
+            if selectedCount == 0 {
+                Text("Choose which apps get blocked during sessions")
+                    .font(.system(size: 13))
+                    .foregroundColor(.ink3)
+            }
+
+            Button {
+                showAppPicker = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: selectedCount > 0 ? "pencil" : "plus")
+                        .font(.system(size: 13))
+                    Text(selectedCount > 0 ? "Edit blocked apps" : "Select apps")
+                        .font(.system(size: 14, weight: .medium))
+                }
+                .foregroundColor(.ink)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(Color.bg2)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+        }
+        .padding(16)
+        .cardStyle()
+        .padding(.horizontal, 16)
         .padding(.bottom, 14)
     }
 }

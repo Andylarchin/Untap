@@ -39,6 +39,7 @@ struct HomeView: View {
         .onChange(of: nfcManager.lastScannedTag) { _, newValue in
             if newValue != nil {
                 toggleSession()
+                nfcManager.lastScannedTag = nil
             }
         }
         .sheet(isPresented: $showSessionSummary) {
@@ -123,7 +124,8 @@ struct HeaderView: View {
                 )
         }
         .padding(.horizontal, 20)
-        .padding(.vertical, 6)
+        .padding(.top, 16)
+        .padding(.bottom, 6)
     }
 }
 

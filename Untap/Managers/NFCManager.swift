@@ -18,7 +18,7 @@ class NFCManager: NSObject, ObservableObject {
     @Published var errorMessage: String?
     @Published var pairedTags: [PairedNFCTag] = []
 
-    private var session: NFCNDEFReaderSession?
+    private var tagSession: NFCTagReaderSession?
     private var hapticEngine: CHHapticEngine?
     private var scanMode: ScanMode = .toggle
 
@@ -31,7 +31,7 @@ class NFCManager: NSObject, ObservableObject {
     // MARK: - Public Methods
 
     var isNFCAvailable: Bool {
-        NFCNDEFReaderSession.readingAvailable
+        NFCTagReaderSession.readingAvailable
     }
 
     var hasPairedTags: Bool {
@@ -47,8 +47,8 @@ class NFCManager: NSObject, ObservableObject {
     }
 
     func stopScanning() {
-        session?.invalidate()
-        session = nil
+        tagSession?.invalidate()
+        tagSession = nil
         isScanning = false
     }
 
@@ -84,28 +84,31 @@ class NFCManager: NSObject, ObservableObject {
         scanMode = mode
         try? hapticEngine?.start()
 
-        session = NFCNDEFReaderSession(
-            delegate: self,
-            queue: nil,
-            invalidateAfterFirstRead: true
-        )
-
         switch mode {
         case .toggle:
             if pairedTags.isEmpty {
-                session?.alertMessage = "No tags paired yet. Go to Blocks to pair a tag first."
-                session?.invalidate()
-                session = nil
                 errorMessage = "Pair a tag first in the Blocks tab"
                 return
             }
-            session?.alertMessage = "Hold your iPhone near your paired NFC tag"
         case .pair:
-            session?.alertMessage = "Hold your iPhone near the NFC tag you want to pair"
+            break
         }
 
-        session?.begin()
+        tagSession = NFCTagReaderSession(pollingOption: [.iso14443, .iso15693], delegate: self)
+
+        switch mode {
+        case .toggle:
+            tagSession?.alertMessage = "Hold your iPhone near your paired NFC tag"
+        case .pair:
+            tagSession?.alertMessage = "Hold your iPhone near the NFC tag you want to pair"
+        }
+
+        tagSession?.begin()
         isScanning = true
+    }
+
+    private func uidString(from data: Data) -> String {
+        data.map { String(format: "%02X", $0) }.joined(separator: ":")
     }
 
     private func loadPairedTags() {
@@ -121,29 +124,29 @@ class NFCManager: NSObject, ObservableObject {
         }
     }
 
-    private func processTag(identifier: String, session: NFCNDEFReaderSession) {
+    private func handleTagIdentifier(_ identifier: String) {
         DispatchQueue.main.async {
             switch self.scanMode {
             case .pair:
                 if self.pairedTags.contains(where: { $0.identifier == identifier }) {
-                    session.alertMessage = "This tag is already paired."
+                    self.tagSession?.alertMessage = "This tag is already paired."
                 } else {
                     self.playTapFeedback()
                     self.lastPairedTagId = identifier
-                    session.alertMessage = "Tag detected! Name it to finish pairing."
+                    self.tagSession?.alertMessage = "Tag detected! Name it to finish pairing."
                 }
-                session.invalidate()
+                self.tagSession?.invalidate()
 
             case .toggle:
                 if self.pairedTags.contains(where: { $0.identifier == identifier }) {
                     self.playTapFeedback()
                     self.lastScannedTag = identifier
-                    session.alertMessage = "Tag recognized! Blocking toggled."
+                    self.tagSession?.alertMessage = "Tag recognized! Blocking toggled."
                 } else {
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
-                    session.alertMessage = "Unrecognized tag. Pair it first in the Blocks tab."
+                    self.tagSession?.alertMessage = "Unrecognized tag. Pair it first in the Blocks tab."
                 }
-                session.invalidate()
+                self.tagSession?.invalidate()
             }
         }
     }
@@ -226,60 +229,21 @@ class NFCManager: NSObject, ObservableObject {
     }
 }
 
-// MARK: - NFCNDEFReaderSessionDelegate
-extension NFCManager: NFCNDEFReaderSessionDelegate {
+// MARK: - NFCTagReaderSessionDelegate
+extension NFCManager: NFCTagReaderSessionDelegate {
 
-    func readerSession(_ session: NFCNDEFReaderSession, didDetectNDEFs messages: [NFCNDEFMessage]) {
-        for message in messages {
-            for record in message.records {
-                let identifier = extractIdentifier(from: record)
-                processTag(identifier: identifier, session: session)
-                return
-            }
+    func tagReaderSessionDidBecomeActive(_ session: NFCTagReaderSession) {
+        DispatchQueue.main.async {
+            self.isScanning = true
         }
     }
 
-    func readerSession(_ session: NFCNDEFReaderSession, didDetect tags: [NFCNDEFTag]) {
-        guard let tag = tags.first else { return }
-
-        session.connect(to: tag) { [weak self] error in
-            if let error = error {
-                session.invalidate(errorMessage: "Connection failed: \(error.localizedDescription)")
-                return
-            }
-
-            tag.queryNDEFStatus { status, capacity, error in
-                if let error = error {
-                    session.invalidate(errorMessage: "Query failed: \(error.localizedDescription)")
-                    return
-                }
-
-                tag.readNDEF { message, error in
-                    // Build a stable identifier from the tag data
-                    let identifier: String
-                    if let message = message, let record = message.records.first {
-                        identifier = self?.extractIdentifier(from: record) ?? UUID().uuidString
-                    } else {
-                        // No NDEF data — use a hash of the tag's description as a fallback
-                        identifier = "tag-\(String(describing: tag).hashValue)"
-                    }
-
-                    self?.processTag(identifier: identifier, session: session)
-                }
-            }
-        }
-    }
-
-    func readerSession(_ session: NFCNDEFReaderSession, didInvalidateWithError error: Error) {
+    func tagReaderSession(_ session: NFCTagReaderSession, didInvalidateWithError error: Error) {
         DispatchQueue.main.async {
             self.isScanning = false
 
             if let nfcError = error as? NFCReaderError,
-               nfcError.code == .readerSessionInvalidationErrorUserCanceled {
-                return
-            }
-
-            if let nfcError = error as? NFCReaderError,
+               nfcError.code == .readerSessionInvalidationErrorUserCanceled ||
                nfcError.code == .readerSessionInvalidationErrorFirstNDEFTagRead {
                 return
             }
@@ -288,21 +252,34 @@ extension NFCManager: NFCNDEFReaderSessionDelegate {
         }
     }
 
-    func readerSessionDidBecomeActive(_ session: NFCNDEFReaderSession) {
-        DispatchQueue.main.async {
-            self.isScanning = true
-        }
-    }
+    func tagReaderSession(_ session: NFCTagReaderSession, didDetect tags: [NFCTag]) {
+        guard let tag = tags.first else { return }
 
-    private func extractIdentifier(from record: NFCNDEFPayload) -> String {
-        if let payload = String(data: record.payload, encoding: .utf8), !payload.isEmpty {
-            return payload
+        session.connect(to: tag) { [weak self] error in
+            guard let self = self else { return }
+
+            if error != nil {
+                session.invalidate(errorMessage: "Connection failed. Try again.")
+                return
+            }
+
+            let uid: String
+            switch tag {
+            case .miFare(let miFareTag):
+                uid = self.uidString(from: miFareTag.identifier)
+            case .iso7816(let iso7816Tag):
+                uid = self.uidString(from: iso7816Tag.identifier)
+            case .iso15693(let iso15693Tag):
+                uid = self.uidString(from: iso15693Tag.identifier)
+            case .feliCa(let feliCaTag):
+                uid = self.uidString(from: feliCaTag.currentIDm)
+            @unknown default:
+                session.invalidate(errorMessage: "Unsupported tag type.")
+                return
+            }
+
+            self.handleTagIdentifier(uid)
         }
-        if !record.identifier.isEmpty,
-           let id = String(data: record.identifier, encoding: .utf8) {
-            return id
-        }
-        return "nfc-\(record.payload.hashValue)"
     }
 }
 

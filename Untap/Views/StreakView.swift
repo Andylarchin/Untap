@@ -19,7 +19,7 @@ struct StreakView: View {
                     .foregroundColor(.ink)
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 8)
+                .padding(.top, 20)
                 .padding(.bottom, 14)
 
                 StreakHeroCard(sessionManager: sessionManager)

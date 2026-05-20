@@ -29,25 +29,23 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
 
     private func makeConfig(for appName: String?) -> ShieldConfiguration {
         let cfg = loadConfig()
-        let title = appName != nil ? "\(cfg.iconEmoji) \(appName!) is blocked" : "\(cfg.iconEmoji) \(cfg.title)"
+        let title = appName != nil ? "\(appName!) is blocked" : cfg.title
+
+        let bgColor = UIColor(red: 250/255, green: 248/255, blue: 245/255, alpha: 1)
+        let inkColor = UIColor(red: 31/255, green: 27/255, blue: 22/255, alpha: 1)
+        let subtitleColor = UIColor(red: 107/255, green: 101/255, blue: 96/255, alpha: 1)
+
+        let icon = UIImage(systemName: "hand.raised.fill")?
+            .withTintColor(.systemRed, renderingMode: .alwaysOriginal)
 
         return ShieldConfiguration(
-            backgroundBlurStyle: .systemThickMaterial,
-            backgroundColor: UIColor(red: 250/255, green: 248/255, blue: 245/255, alpha: 1),
-            icon: nil,
-            title: ShieldConfiguration.Label(
-                text: title,
-                color: UIColor(red: 31/255, green: 27/255, blue: 22/255, alpha: 1)
-            ),
-            subtitle: ShieldConfiguration.Label(
-                text: cfg.body,
-                color: UIColor(red: 107/255, green: 101/255, blue: 96/255, alpha: 1)
-            ),
-            primaryButtonLabel: ShieldConfiguration.Label(
-                text: cfg.primaryButtonLabel,
-                color: .white
-            ),
-            primaryButtonBackgroundColor: UIColor(red: 31/255, green: 27/255, blue: 22/255, alpha: 1),
+            backgroundBlurStyle: nil,
+            backgroundColor: bgColor,
+            icon: icon,
+            title: ShieldConfiguration.Label(text: title, color: inkColor),
+            subtitle: ShieldConfiguration.Label(text: cfg.body, color: subtitleColor),
+            primaryButtonLabel: ShieldConfiguration.Label(text: cfg.primaryButtonLabel, color: .white),
+            primaryButtonBackgroundColor: inkColor,
             secondaryButtonLabel: nil
         )
     }
