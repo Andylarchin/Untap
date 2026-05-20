@@ -1,33 +1,42 @@
-//
-//  ShieldConfigurationExtension.swift
-//  UntapShieldConfig
-//
-//  Created by Andy Larchin on 5/19/26.
-//
-
+import Foundation
 import ManagedSettings
 import ManagedSettingsUI
 import UIKit
 
 class ShieldConfigurationExtension: ShieldConfigurationDataSource {
 
-    private var config: ShieldMessageConfig {
-        let defaults = UserDefaults(suiteName: "group.com.andy.Untap")
-        if let data = defaults?.data(forKey: "shieldConfig"),
-           let config = try? JSONDecoder().decode(ShieldMessageConfig.self, from: data) {
-            return config
-        }
-        return ShieldMessageConfig.default
+    private let appGroupID = "group.com.andy.Untap"
+
+    override func configuration(shielding application: Application) -> ShieldConfiguration {
+        recordAttempt(name: application.localizedDisplayName ?? "App")
+        return makeConfig(for: application.localizedDisplayName)
     }
 
-    private func makeShieldConfiguration() -> ShieldConfiguration {
-        let cfg = config
+    override func configuration(shielding application: Application, in category: ActivityCategory) -> ShieldConfiguration {
+        recordAttempt(name: application.localizedDisplayName ?? category.localizedDisplayName ?? "App")
+        return makeConfig(for: application.localizedDisplayName)
+    }
+
+    override func configuration(shielding webDomain: WebDomain) -> ShieldConfiguration {
+        recordAttempt(name: webDomain.domain ?? "Website")
+        return makeConfig(for: webDomain.domain)
+    }
+
+    override func configuration(shielding webDomain: WebDomain, in category: ActivityCategory) -> ShieldConfiguration {
+        recordAttempt(name: webDomain.domain ?? "Website")
+        return makeConfig(for: webDomain.domain)
+    }
+
+    private func makeConfig(for appName: String?) -> ShieldConfiguration {
+        let cfg = loadConfig()
+        let title = appName != nil ? "\(cfg.iconEmoji) \(appName!) is blocked" : "\(cfg.iconEmoji) \(cfg.title)"
+
         return ShieldConfiguration(
             backgroundBlurStyle: .systemThickMaterial,
             backgroundColor: UIColor(red: 250/255, green: 248/255, blue: 245/255, alpha: 1),
             icon: nil,
             title: ShieldConfiguration.Label(
-                text: "\(cfg.iconEmoji) \(cfg.title)",
+                text: title,
                 color: UIColor(red: 31/255, green: 27/255, blue: 22/255, alpha: 1)
             ),
             subtitle: ShieldConfiguration.Label(
@@ -43,20 +52,28 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
         )
     }
 
-    override func configuration(shielding application: Application) -> ShieldConfiguration {
-        makeShieldConfiguration()
+    private func loadConfig() -> ShieldMessageConfig {
+        guard let defaults = UserDefaults(suiteName: appGroupID),
+              let data = defaults.data(forKey: "shieldConfig"),
+              let config = try? JSONDecoder().decode(ShieldMessageConfig.self, from: data) else {
+            return .default
+        }
+        return config
     }
 
-    override func configuration(shielding application: Application, in category: ActivityCategory) -> ShieldConfiguration {
-        makeShieldConfiguration()
-    }
+    private func recordAttempt(name: String) {
+        guard let defaults = UserDefaults(suiteName: appGroupID) else { return }
 
-    override func configuration(shielding webDomain: WebDomain) -> ShieldConfiguration {
-        makeShieldConfiguration()
-    }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let dateKey = "attempts_\(formatter.string(from: Date()))"
 
-    override func configuration(shielding webDomain: WebDomain, in category: ActivityCategory) -> ShieldConfiguration {
-        makeShieldConfiguration()
+        var counts = defaults.dictionary(forKey: dateKey) as? [String: Int] ?? [:]
+        counts[name, default: 0] += 1
+        defaults.set(counts, forKey: dateKey)
+
+        let total = defaults.integer(forKey: "totalBlockedAttempts")
+        defaults.set(total + 1, forKey: "totalBlockedAttempts")
     }
 }
 
