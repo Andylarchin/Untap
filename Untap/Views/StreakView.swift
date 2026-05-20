@@ -40,7 +40,7 @@ struct StreakView: View {
     }
 }
 
-// MARK: - Streak Hero
+// MARK: - Streak Hero (Compact)
 struct StreakHeroCard: View {
     var sessionManager: SessionManager
 
@@ -49,89 +49,59 @@ struct StreakHeroCard: View {
     private var isPersonalBest: Bool { streak >= best && streak > 0 }
 
     var body: some View {
-        VStack(spacing: 16) {
-            HStack(spacing: 24) {
-                VStack(spacing: 6) {
-                    ZStack {
-                        Circle()
-                            .fill(
-                                RadialGradient(
-                                    colors: [Color.amber.opacity(0.3), Color.clear],
-                                    center: .center,
-                                    startRadius: 0,
-                                    endRadius: 50
-                                )
-                            )
-                            .frame(width: 100, height: 100)
+        HStack(spacing: 0) {
+            HStack(spacing: 10) {
+                Image(systemName: "flame.fill")
+                    .font(.system(size: 22))
+                    .foregroundColor(.amber)
 
-                        VStack(spacing: 2) {
-                            Image(systemName: "flame.fill")
-                                .font(.system(size: 24))
-                                .foregroundColor(.amber)
-
-                            HStack(alignment: .lastTextBaseline, spacing: 2) {
-                                Text("\(streak)")
-                                    .font(.instrumentSerif(size: 44))
-                                Text("d")
-                                    .font(.instrumentSerifItalic(size: 18))
-                                    .foregroundColor(.ink2)
-                            }
-                            .foregroundColor(.ink)
-                        }
-                    }
-
-                    Text("Current streak")
-                        .monoLabel()
-
-                    if isPersonalBest {
-                        Text("PERSONAL BEST")
-                            .font(.geistMono(size: 9, weight: .bold))
-                            .kerning(1.5)
-                            .foregroundColor(.amber)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(Color.amber.opacity(0.15))
-                            .clipShape(Capsule())
-                    }
-                }
-
-                Rectangle()
-                    .fill(Color.line)
-                    .frame(width: 1, height: 60)
-
-                VStack(spacing: 6) {
+                VStack(alignment: .leading, spacing: 2) {
                     HStack(alignment: .lastTextBaseline, spacing: 2) {
-                        Text("\(best)")
-                            .font(.instrumentSerif(size: 36))
+                        Text("\(streak)")
+                            .font(.instrumentSerif(size: 34))
                         Text("d")
                             .font(.instrumentSerifItalic(size: 16))
                             .foregroundColor(.ink2)
                     }
                     .foregroundColor(.ink)
 
-                    Text("Best streak")
-                        .monoLabel()
+                    HStack(spacing: 6) {
+                        Text("Current streak")
+                            .monoLabel()
+                        if isPersonalBest {
+                            Text("BEST")
+                                .font(.geistMono(size: 8, weight: .bold))
+                                .kerning(1)
+                                .foregroundColor(.amber)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.amber.opacity(0.15))
+                                .clipShape(Capsule())
+                        }
+                    }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-            if streak > 0 {
-                HStack(spacing: 4) {
-                    ForEach(0..<min(streak, 14), id: \.self) { i in
-                        Circle()
-                            .fill(Color.amber)
-                            .frame(width: 8, height: 8)
-                            .opacity(Double(i + 1) / Double(min(streak, 14)))
-                    }
-                    if streak > 14 {
-                        Text("+\(streak - 14)")
-                            .font(.geistMono(size: 9))
-                            .foregroundColor(.ink3)
-                    }
+            Divider().frame(height: 44)
+
+            VStack(spacing: 2) {
+                HStack(alignment: .lastTextBaseline, spacing: 2) {
+                    Text("\(best)")
+                        .font(.instrumentSerif(size: 34))
+                    Text("d")
+                        .font(.instrumentSerifItalic(size: 16))
+                        .foregroundColor(.ink2)
                 }
+                .foregroundColor(.ink)
+
+                Text("Best streak")
+                    .monoLabel()
             }
+            .frame(maxWidth: .infinity)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 24)
+        .padding(.horizontal, 18)
+        .padding(.vertical, 16)
         .cardStyle()
         .padding(.horizontal, 16)
         .padding(.bottom, 14)
@@ -143,13 +113,26 @@ struct HeatmapCalendarCard: View {
     var sessionManager: SessionManager
     @Binding var selectedDate: Date?
 
-    private let weeksToShow = 12
-    private let cellSize: CGFloat = 16
     private let cellSpacing: CGFloat = 3
     private let cal = Calendar.current
 
+    private var installDate: Date {
+        UserDefaults.standard.object(forKey: "appInstallDate") as? Date ?? Date()
+    }
+
+    private var weeksCount: Int {
+        let days = cal.dateComponents([.day], from: cal.startOfDay(for: installDate), to: cal.startOfDay(for: Date())).day ?? 0
+        return max(min((days / 7) + 2, 16), 2)
+    }
+
+    private var cellSize: CGFloat {
+        let available = UIScreen.main.bounds.width - 93
+        let size = (available - CGFloat(max(weeksCount - 1, 0)) * cellSpacing) / CGFloat(max(weeksCount, 1))
+        return min(max(size, 12), 22)
+    }
+
     private var heatmapData: [Date: Int] {
-        sessionManager.minutesByDay(weeks: weeksToShow)
+        sessionManager.minutesByDay(weeks: weeksCount)
     }
 
     private var maxMinutes: Int {
@@ -159,9 +142,8 @@ struct HeatmapCalendarCard: View {
     private var gridDays: [Date] {
         let today = cal.startOfDay(for: Date())
         let todayWeekday = cal.component(.weekday, from: today)
-        let daysFromSunday = todayWeekday - 1
-        guard let endOfWeek = cal.date(byAdding: .day, value: 6 - daysFromSunday, to: today) else { return [] }
-        guard let startDate = cal.date(byAdding: .day, value: -(weeksToShow * 7 - 1), to: endOfWeek) else { return [] }
+        let endOfWeek = cal.date(byAdding: .day, value: 7 - todayWeekday, to: today)!
+        guard let startDate = cal.date(byAdding: .day, value: -(weeksCount * 7 - 1), to: endOfWeek) else { return [] }
 
         var days: [Date] = []
         var current = startDate
@@ -173,7 +155,7 @@ struct HeatmapCalendarCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 16) {
             HStack {
                 HStack(spacing: 8) {
                     Image(systemName: "calendar")
@@ -185,7 +167,7 @@ struct HeatmapCalendarCard: View {
 
                 Spacer()
 
-                Text("Last \(weeksToShow) weeks")
+                Text("Last \(weeksCount) weeks")
                     .font(.geistMono(size: 10))
                     .foregroundColor(.ink3)
             }
@@ -206,7 +188,7 @@ struct HeatmapCalendarCard: View {
                 .frame(width: 18)
 
                 HStack(spacing: cellSpacing) {
-                    ForEach(0..<weeksToShow, id: \.self) { week in
+                    ForEach(0..<weeksCount, id: \.self) { week in
                         VStack(spacing: cellSpacing) {
                             ForEach(0..<7, id: \.self) { day in
                                 let index = week * 7 + day
@@ -264,16 +246,16 @@ struct HeatmapCalendarCard: View {
                         .fill(Color.bg2)
                         .frame(width: 12, height: 12)
                     RoundedRectangle(cornerRadius: 2.5)
-                        .fill(Color(hex: "C8D4C0"))
+                        .fill(Color.sage.opacity(0.25))
                         .frame(width: 12, height: 12)
                     RoundedRectangle(cornerRadius: 2.5)
-                        .fill(Color(hex: "A3B898"))
+                        .fill(Color.sage.opacity(0.45))
+                        .frame(width: 12, height: 12)
+                    RoundedRectangle(cornerRadius: 2.5)
+                        .fill(Color.sage.opacity(0.7))
                         .frame(width: 12, height: 12)
                     RoundedRectangle(cornerRadius: 2.5)
                         .fill(Color.sage)
-                        .frame(width: 12, height: 12)
-                    RoundedRectangle(cornerRadius: 2.5)
-                        .fill(Color.sageDeep)
                         .frame(width: 12, height: 12)
                 }
 
@@ -282,7 +264,7 @@ struct HeatmapCalendarCard: View {
                     .foregroundColor(.ink3)
             }
         }
-        .padding(18)
+        .padding(20)
         .cardStyle()
         .padding(.horizontal, 16)
         .padding(.bottom, 14)
@@ -291,10 +273,10 @@ struct HeatmapCalendarCard: View {
     private func cellColor(minutes: Int) -> Color {
         guard minutes > 0 else { return Color.bg2 }
         let ratio = Double(minutes) / Double(maxMinutes)
-        if ratio < 0.25 { return Color(hex: "C8D4C0") }
-        if ratio < 0.5 { return Color(hex: "A3B898") }
-        if ratio < 0.75 { return Color.sage }
-        return Color.sageDeep
+        if ratio < 0.25 { return Color.sage.opacity(0.25) }
+        if ratio < 0.5 { return Color.sage.opacity(0.45) }
+        if ratio < 0.75 { return Color.sage.opacity(0.7) }
+        return Color.sage
     }
 
     private func dayLabel(_ day: Int) -> String {

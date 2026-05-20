@@ -328,9 +328,11 @@ class SessionManager: ObservableObject {
 
     func syncAttemptsFromExtension() {
         guard let defaults = UserDefaults(suiteName: "group.com.andy.Untap") else { return }
+        defaults.synchronize()
 
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         let dateKey = "attempts_\(formatter.string(from: Date()))"
 
         guard let extensionCounts = defaults.dictionary(forKey: dateKey) as? [String: Int] else { return }

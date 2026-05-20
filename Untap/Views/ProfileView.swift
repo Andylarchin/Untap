@@ -4,6 +4,7 @@ struct ProfileView: View {
     @EnvironmentObject var appBlocker: AppBlockingManager
     @EnvironmentObject var sessionManager: SessionManager
     @State private var showShieldSettings = false
+    @AppStorage("darkMode") private var darkMode = false
 
     var body: some View {
         ScrollView {
@@ -16,10 +17,38 @@ struct ProfileView: View {
                     title: "Preferences",
                     items: [
                         SettingsItem(icon: "bell.fill", title: "Notifications", subtitle: "Reminders & alerts"),
-                        SettingsItem(icon: "moon.fill", title: "Appearance", subtitle: "Light mode"),
                         SettingsItem(icon: "hand.raised.fill", title: "Privacy", subtitle: "Manage your data"),
                     ]
                 )
+
+                // Dark mode toggle
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack(spacing: 12) {
+                        Image(systemName: darkMode ? "moon.fill" : "sun.max.fill")
+                            .font(.system(size: 16))
+                            .foregroundColor(.ink2)
+                            .frame(width: 32)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Dark Mode")
+                                .font(.system(size: 15))
+                                .foregroundColor(.ink)
+                            Text(darkMode ? "On" : "Off")
+                                .font(.system(size: 12))
+                                .foregroundColor(.ink3)
+                        }
+
+                        Spacer()
+
+                        Toggle("", isOn: $darkMode)
+                            .toggleStyle(SageToggleStyle())
+                    }
+                    .padding(.vertical, 12)
+                }
+                .padding(18)
+                .cardStyle()
+                .padding(.horizontal, 16)
+                .padding(.bottom, 14)
 
                 // Shield message settings button
                 Button {

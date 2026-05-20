@@ -192,9 +192,38 @@ struct BlockingRule: Codable, Identifiable {
     var schedule: String
     var isActive: Bool
     var accentColorHex: String
+    var startHour: Int?
+    var startMinute: Int?
+    var endHour: Int?
+    var endMinute: Int?
+    var activeDays: [Int]?
 
     var accentColor: Color {
         Color(hex: accentColorHex)
+    }
+
+    var scheduleDisplay: String {
+        guard let sh = startHour, let eh = endHour else { return schedule }
+        let sm = startMinute ?? 0
+        let em = endMinute ?? 0
+        let days = activeDays ?? Array(0...6)
+        return "\(formatDays(days)) · \(formatTime(sh, sm)) – \(formatTime(eh, em))"
+    }
+
+    private func formatDays(_ days: [Int]) -> String {
+        let daySet = Set(days)
+        if daySet == Set(0...6) { return "Daily" }
+        if daySet == Set(1...5) { return "Mon–Fri" }
+        if daySet == Set([0, 6]) { return "Weekends" }
+        let names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        return days.sorted().map { names[$0] }.joined(separator: ", ")
+    }
+
+    private func formatTime(_ hour: Int, _ minute: Int) -> String {
+        let h = hour % 12 == 0 ? 12 : hour % 12
+        let period = hour < 12 ? "AM" : "PM"
+        if minute == 0 { return "\(h) \(period)" }
+        return "\(h):\(String(format: "%02d", minute)) \(period)"
     }
 
     static var defaultRules: [BlockingRule] {
@@ -207,7 +236,12 @@ struct BlockingRule: Codable, Identifiable {
                 appSelection: nil,
                 schedule: "Mon–Fri · 6 AM – 12 PM",
                 isActive: true,
-                accentColorHex: "7A8F6A"
+                accentColorHex: "7A8F6A",
+                startHour: 6,
+                startMinute: 0,
+                endHour: 12,
+                endMinute: 0,
+                activeDays: [1, 2, 3, 4, 5]
             ),
             BlockingRule(
                 id: UUID(),
@@ -217,7 +251,12 @@ struct BlockingRule: Codable, Identifiable {
                 appSelection: nil,
                 schedule: "Daily · 10 PM – 7 AM",
                 isActive: true,
-                accentColorHex: "C97B6E"
+                accentColorHex: "C97B6E",
+                startHour: 22,
+                startMinute: 0,
+                endHour: 7,
+                endMinute: 0,
+                activeDays: [0, 1, 2, 3, 4, 5, 6]
             ),
             BlockingRule(
                 id: UUID(),
@@ -227,7 +266,12 @@ struct BlockingRule: Codable, Identifiable {
                 appSelection: nil,
                 schedule: "Sat · 7 AM – 11 AM",
                 isActive: false,
-                accentColorHex: "D68A3C"
+                accentColorHex: "D68A3C",
+                startHour: 7,
+                startMinute: 0,
+                endHour: 11,
+                endMinute: 0,
+                activeDays: [6]
             )
         ]
     }

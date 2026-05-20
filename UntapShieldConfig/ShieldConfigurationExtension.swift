@@ -60,6 +60,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
 
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         let dateKey = "attempts_\(formatter.string(from: Date()))"
 
         var counts = defaults.dictionary(forKey: dateKey) as? [String: Int] ?? [:]
@@ -68,6 +69,7 @@ class ShieldConfigurationExtension: ShieldConfigurationDataSource {
 
         let total = defaults.integer(forKey: "totalBlockedAttempts")
         defaults.set(total + 1, forKey: "totalBlockedAttempts")
+        defaults.synchronize()
     }
 }
 

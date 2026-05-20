@@ -415,7 +415,7 @@ struct RuleCardView: View {
                 HStack(spacing: 5) {
                     Image(systemName: "clock")
                         .font(.system(size: 12))
-                    Text(rule.schedule)
+                    Text(rule.scheduleDisplay)
                 }
                 .font(.geistMono(size: 11))
                 .foregroundColor(.ink3)
@@ -549,60 +549,141 @@ struct NewRuleSheet: View {
     @State private var name = ""
     @State private var ruleDescription = ""
     @State private var selectedColorHex = "7A8F6A"
+    @State private var ruleApps = FamilyActivitySelection()
+    @State private var showRuleAppPicker = false
+    @State private var startTime = Calendar.current.date(from: DateComponents(hour: 9, minute: 0)) ?? Date()
+    @State private var endTime = Calendar.current.date(from: DateComponents(hour: 17, minute: 0)) ?? Date()
+    @State private var selectedDays: Set<Int> = Set([1, 2, 3, 4, 5])
 
     private let colorOptions = [
         "7A8F6A", "C97B6E", "D68A3C", "6B8FA6", "8A6B9F", "5A8F8A"
     ]
 
+    private let dayNames = ["S", "M", "T", "W", "T", "F", "S"]
+
     var body: some View {
         NavigationView {
-            VStack(spacing: 24) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Rule name")
-                        .font(.system(size: 12))
-                        .foregroundColor(.ink3)
-                    TextField("e.g. Morning focus", text: $name)
-                        .font(.system(size: 16))
-                        .padding(14)
-                        .background(Color.bg2)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Rule name")
+                            .font(.system(size: 12))
+                            .foregroundColor(.ink3)
+                        TextField("e.g. Morning focus", text: $name)
+                            .font(.system(size: 16))
+                            .padding(14)
+                            .background(Color.bg2)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
 
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Description")
-                        .font(.system(size: 12))
-                        .foregroundColor(.ink3)
-                    TextField("e.g. Deep work before noon", text: $ruleDescription)
-                        .font(.system(size: 16))
-                        .padding(14)
-                        .background(Color.bg2)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                }
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Description")
+                            .font(.system(size: 12))
+                            .foregroundColor(.ink3)
+                        TextField("e.g. Deep work before noon", text: $ruleDescription)
+                            .font(.system(size: 16))
+                            .padding(14)
+                            .background(Color.bg2)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Color")
-                        .font(.system(size: 12))
-                        .foregroundColor(.ink3)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Apps to block")
+                            .font(.system(size: 12))
+                            .foregroundColor(.ink3)
 
-                    HStack(spacing: 12) {
-                        ForEach(colorOptions, id: \.self) { hex in
-                            Circle()
-                                .fill(Color(hex: hex))
-                                .frame(width: 32, height: 32)
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color.ink, lineWidth: selectedColorHex == hex ? 2 : 0)
-                                )
-                                .onTapGesture {
-                                    selectedColorHex = hex
-                                }
+                        Button {
+                            showRuleAppPicker = true
+                        } label: {
+                            HStack(spacing: 8) {
+                                Image(systemName: "square.grid.3x3.fill")
+                                    .font(.system(size: 14))
+                                let count = ruleApps.applicationTokens.count + ruleApps.categoryTokens.count
+                                Text(count > 0 ? "\(count) app\(count == 1 ? "" : "s") selected" : "Choose apps")
+                                    .font(.system(size: 14))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12))
+                            }
+                            .foregroundColor(.ink)
+                            .padding(14)
+                            .background(Color.bg2)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+                    }
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Schedule")
+                            .font(.system(size: 12))
+                            .foregroundColor(.ink3)
+
+                        HStack(spacing: 16) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("START")
+                                    .font(.geistMono(size: 9))
+                                    .foregroundColor(.ink3)
+                                DatePicker("", selection: $startTime, displayedComponents: .hourAndMinute)
+                                    .labelsHidden()
+                            }
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("END")
+                                    .font(.geistMono(size: 9))
+                                    .foregroundColor(.ink3)
+                                DatePicker("", selection: $endTime, displayedComponents: .hourAndMinute)
+                                    .labelsHidden()
+                            }
+                        }
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Active days")
+                            .font(.system(size: 12))
+                            .foregroundColor(.ink3)
+
+                        HStack(spacing: 8) {
+                            ForEach(0..<7, id: \.self) { day in
+                                let isSelected = selectedDays.contains(day)
+                                Text(dayNames[day])
+                                    .font(.geistMono(size: 12))
+                                    .foregroundColor(isSelected ? .white : .ink3)
+                                    .frame(width: 36, height: 36)
+                                    .background(isSelected ? Color.sage : Color.bg2)
+                                    .clipShape(Circle())
+                                    .onTapGesture {
+                                        if isSelected {
+                                            selectedDays.remove(day)
+                                        } else {
+                                            selectedDays.insert(day)
+                                        }
+                                    }
+                            }
+                        }
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Color")
+                            .font(.system(size: 12))
+                            .foregroundColor(.ink3)
+
+                        HStack(spacing: 12) {
+                            ForEach(colorOptions, id: \.self) { hex in
+                                Circle()
+                                    .fill(Color(hex: hex))
+                                    .frame(width: 32, height: 32)
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.ink, lineWidth: selectedColorHex == hex ? 2 : 0)
+                                    )
+                                    .onTapGesture {
+                                        selectedColorHex = hex
+                                    }
+                            }
                         }
                     }
                 }
-
-                Spacer()
+                .padding(24)
             }
-            .padding(24)
             .background(Color.bg)
             .navigationTitle("New Rule")
             .navigationBarTitleDisplayMode(.inline)
@@ -612,20 +693,42 @@ struct NewRuleSheet: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Create") {
+                        let startComponents = Calendar.current.dateComponents([.hour, .minute], from: startTime)
+                        let endComponents = Calendar.current.dateComponents([.hour, .minute], from: endTime)
+
                         let rule = BlockingRule(
                             id: UUID(),
                             name: name.isEmpty ? "New Rule" : name,
                             description: ruleDescription.isEmpty ? "Custom blocking rule" : ruleDescription,
                             apps: [],
-                            appSelection: nil,
+                            appSelection: ruleApps,
                             schedule: "Custom",
                             isActive: false,
-                            accentColorHex: selectedColorHex
+                            accentColorHex: selectedColorHex,
+                            startHour: startComponents.hour,
+                            startMinute: startComponents.minute,
+                            endHour: endComponents.hour,
+                            endMinute: endComponents.minute,
+                            activeDays: Array(selectedDays)
                         )
                         appBlocker.addRule(rule)
                         dismiss()
                     }
                     .fontWeight(.semibold)
+                }
+            }
+            .sheet(isPresented: $showRuleAppPicker) {
+                NavigationView {
+                    FamilyActivityPicker(selection: $ruleApps)
+                        .navigationTitle("Select Apps")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Button("Done") {
+                                    showRuleAppPicker = false
+                                }
+                            }
+                        }
                 }
             }
         }
